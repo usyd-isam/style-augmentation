@@ -13,10 +13,11 @@ toPIL = ToPILImage()
 # load image:
 im = Image.open('mug.png')
 im_torch = toTensor(im).unsqueeze(0) # 1 x 3 x 256 x 256
-im_torch = im_torch.to('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # create style augmentor:
 augmentor = StyleAugmentor()
+
+im_torch = im_torch.to(augmentor.device)
 
 # randomize style:
 im_restyled = augmentor(im_torch)
