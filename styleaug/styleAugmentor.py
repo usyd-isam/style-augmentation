@@ -4,14 +4,13 @@ import torch.nn as nn
 from .ghiasi import Ghiasi
 from .stylePredictor import StylePredictor
 import numpy as np
-import sys
 from os.path import join, dirname
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-
 class StyleAugmentor(nn.Module):
-    def __init__(self):
+    def __init__(self, device: torch.device=torch.device('cpu')):
         super(StyleAugmentor,self).__init__()
+
+        self.device=device
 
         # create transformer and style predictor networks:
         self.ghiasi = Ghiasi()
@@ -47,7 +46,7 @@ class StyleAugmentor(nn.Module):
     def sample_embedding(self,n):
         # n: number of embeddings to sample
         # returns n x 100 embedding tensor
-        embedding = torch.randn(n,100).to(device) # n x 100
+        embedding = torch.randn(n,100).to(self.device) # n x 100
         embedding = torch.mm(embedding,self.A.transpose(1,0)) + self.mean # n x 100
         return embedding
 
